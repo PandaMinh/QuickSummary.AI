@@ -16,7 +16,16 @@ def index(request):
         input_text = request.POST.get("input_text", "").strip()
         if input_text:
             # gọi model tóm tắt
-            result = summarizer(input_text, max_length=150, min_length=30, do_sample=False)
+            result = summarizer(
+                                    input_text,
+                                    max_length=150,
+                                    min_length=60,
+                                    num_beams=8,
+                                    length_penalty=0.8,           # khuyến khích summary ngắn hơn
+                                    no_repeat_ngram_size=2,
+                                    repetition_penalty=1.5,
+                                    early_stopping=True
+                                )           # lấy kết quả tóm tắt
             summary = result[0]['summary_text']
     return render(request, "chatbot/index.html", {
         "input_text": input_text,
